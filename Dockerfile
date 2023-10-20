@@ -18,7 +18,7 @@ FROM --platform=$TARGETPLATFORM debian:bookworm
 LABEL org.opencontainers.image.authors="AndersonPEM https://github.com/andersonpem"
 
 # Copy the binary from the builder stage to /usr/local/bin
-COPY --from=builder /go/src/app/src/wait-for-mysql /usr/local/bin/netknock
+COPY --from=builder /go/src/app/src/wait-for-mysql /usr/local/bin/wait-for-mysql
 
 # Make the binary executable
 RUN chmod +x /usr/local/bin/wait-for-mysql
