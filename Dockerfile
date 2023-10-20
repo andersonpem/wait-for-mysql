@@ -1,4 +1,4 @@
-FROM --platform=$TARGETPLATFORM go:1.21-bookworm as builder
+FROM --platform=$TARGETPLATFORM golang:1.21-bookworm as builder
 
 # Set the working directory
 WORKDIR /go/src/app
