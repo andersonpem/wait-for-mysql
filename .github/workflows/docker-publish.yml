@@ -45,7 +45,7 @@ jobs:
           password: ${{ secrets.DOCKER_PAT }}
 
       - name: Extract GitHub tag from GITHUB_REF
-        run: echo "DOCKER_TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV_PATH
+        run: echo "DOCKER_TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
 
       - name: Build and push
         uses: docker/build-push-action@v5
