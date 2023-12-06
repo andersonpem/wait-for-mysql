@@ -21,10 +21,23 @@ func main() {
 	// Parse the flags
 	flag.Parse()
 
-	// Validate required flags
-	if *dbUser == "" || *dbHost == "" || *dbPort == "" {
-		log.Fatal("Error: Required arguments -user, -host, or -port not found")
+	// Check for missing required flags
+	missingFlags := []string{}
+	if *dbUser == "" {
+		missingFlags = append(missingFlags, "-user")
 	}
+	if *dbHost == "" {
+		missingFlags = append(missingFlags, "-host")
+	}
+	if *dbPort == "" {
+		missingFlags = append(missingFlags, "-port")
+	}
+
+	if len(missingFlags) > 0 {
+		fmt.Printf("Error: Required argument(s) missing: %s\n", strings.Join(missingFlags, ", "))
+		return
+	}
+
 	// Construct the Data Source Name (DSN)
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", *dbUser, *dbPassword, *dbHost, *dbPort, *dbName)
 
@@ -41,6 +54,11 @@ func main() {
 			if strings.Contains(err.Error(), "Access denied for user") {
 				// If the server responds with 'Access denied', print a message and exit with code 0
 				fmt.Println("(Ping) Server is up! But access was denied. \nMake sure to use proper credentials when actually connecting for real. Exiting!")
+				db.Close()
+				break
+			} else if strings.Contains(err.Error(), "Unknown database") {
+				// If the error is "Unknown database," print a message and exit with code 0
+				fmt.Println("(Ping) Server is up, but the database doesn't exist. Exiting!")
 				db.Close()
 				break
 			} else {
